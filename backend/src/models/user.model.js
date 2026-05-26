@@ -47,7 +47,7 @@ userSchema.methods.generateAccessToken = function () {
             id: this._id,
             name: this.name
         }, 
-        process.env.JWT_ACCESS_TOKEN, 
+        process.env.JWT_ACCESS_TOKEN_SECRET, 
         { 
             expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRY 
         }
@@ -59,7 +59,7 @@ userSchema.methods.generateRefreshToken = function () {
         {
             id: this._id
         }, 
-        process.env.JWT_REFRESH_TOKEN, 
+        process.env.JWT_REFRESH_TOKEN_SECRET, 
         { 
             expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRY 
         }
