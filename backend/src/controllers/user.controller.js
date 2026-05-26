@@ -3,7 +3,7 @@ import CustomError from "../utils/CustomError.js";
 import User from "../models/user.model.js";
 
 
-const userRegisterController = async (req, res) => {
+const userRegisterController = asyncWrap(async (req, res) => {
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
@@ -29,7 +29,8 @@ const userRegisterController = async (req, res) => {
         message: "User registered successfully",
         data
     });
-}
+});
+
 
 
 export {

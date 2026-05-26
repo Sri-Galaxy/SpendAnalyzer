@@ -6,7 +6,7 @@ import {
 
 const userRouter = express.Router();
 
-userRouter.get("/register", userRegisterController);
+userRouter.post("/register", userRegisterController);
 
 
 export default userRouter;
