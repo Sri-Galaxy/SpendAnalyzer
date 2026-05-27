@@ -68,7 +68,7 @@ const userLoginController = asyncWrap(async (req, res) => {
 
     const cookieOptions = {
         httpOnly: true,
-        secure: true,
+        secure: false,
         maxAge: 7 * 24 * 60 * 60 * 1000
     };
 
@@ -86,8 +86,33 @@ const userLoginController = asyncWrap(async (req, res) => {
     });
 });
 
+const userLogoutController = asyncWrap(async (req, res) => {
+    await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            refreshToken: undefined
+        },
+        {
+            returnDocument: "after",
+            runValidators: true
+        }
+    );
+
+    const cookieOptions = {
+        httpOnly: true,
+        secure: false,
+        maxAge: 7 * 24 * 60 * 60 * 1000
+    };
+
+    return res.status(200).clearCookie("refreshToken", cookieOptions).clearCookie("accessToken", cookieOptions).json({
+        success: true,
+        message: "User logged out successfully"
+    });
+});
+
 
 export {
     userRegisterController,
-    userLoginController
+    userLoginController,
+    userLogoutController
 }
