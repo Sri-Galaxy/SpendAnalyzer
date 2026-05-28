@@ -10,8 +10,9 @@ const isAuthenticated = asyncWrap(async (req, res, next) => {
     // Now your error has statusCode: 401
     // Client gets correct status code
     // Client knows exactly what went wrong
+    let decoded;
     try {
-        const decoded = jwt.verify(token, process.env.JWT_ACCESS_TOKEN_SECRET);
+        decoded = jwt.verify(token, process.env.JWT_ACCESS_TOKEN_SECRET);
     } catch (error) {
         if (error.name === 'TokenExpiredError') {
             throw new CustomError(401, 'Token expired - please login again');
@@ -21,8 +22,6 @@ const isAuthenticated = asyncWrap(async (req, res, next) => {
         }
         throw new CustomError(401, 'Authentication failed');
     }
-
-    const decoded = await jwt.verify(token, process.env.JWT_ACCESS_TOKEN_SECRET);
 
     const user = await User.findById(decoded?.id).select('-password -refreshToken');
 
