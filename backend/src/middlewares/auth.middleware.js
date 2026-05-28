@@ -20,7 +20,7 @@ const isAuthenticated = asyncWrap(async (req, res, next) => {
         if (error.name === 'JsonWebTokenError') {
             throw new CustomError(401, 'Invalid token');
         }
-        throw new CustomError(401, 'Authentication failed');
+        throw new CustomError(401, 'Unauthorized - token verification failed');
     }
 
     const user = await User.findById(decoded?.id).select('-password -refreshToken');

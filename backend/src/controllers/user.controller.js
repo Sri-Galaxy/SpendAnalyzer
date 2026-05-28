@@ -19,7 +19,7 @@ const generateTokens = async (user) => {
 }
 
 const refreshAccessTokenController = asyncWrap(async (req, res) => {
-    const incomingRefreshToken = req.cookies?.refreshToken;
+    const incomingRefreshToken = req.cookies?.refreshToken || req.body.refreshToken;
 
     if (!incomingRefreshToken) {
         throw new CustomError(401, "Unauthorized: No refresh token provided");
@@ -31,6 +31,10 @@ const refreshAccessTokenController = asyncWrap(async (req, res) => {
 
     if (!user) {
         throw new CustomError(404, "User Not Found");
+    }
+
+    if (incomingRefreshToken !== user.refreshToken) {
+        throw new CustomError(401, "Invalid refresh token");
     }
 
     const { accessToken, refreshToken } = await generateTokens(user);
