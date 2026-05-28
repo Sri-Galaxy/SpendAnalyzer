@@ -4,11 +4,22 @@ import jwt from 'jsonwebtoken';
 import User from '../models/user.model.js';
 
 
-const isAuthenticated = asyncWrap(async (req, res, next) => {    
+const isAuthenticated = asyncWrap(async (req, res, next) => {
     const token = req.cookies?.accessToken || req.headers.authorization?.split(' ')[1];
 
-    if (!token) {
-        throw new CustomError(401, 'Unauthorized: No token provided');
+    // Now your error has statusCode: 401
+    // Client gets correct status code
+    // Client knows exactly what went wrong
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_ACCESS_TOKEN_SECRET);
+    } catch (error) {
+        if (error.name === 'TokenExpiredError') {
+            throw new CustomError(401, 'Token expired - please login again');
+        }
+        if (error.name === 'JsonWebTokenError') {
+            throw new CustomError(401, 'Invalid token');
+        }
+        throw new CustomError(401, 'Authentication failed');
     }
 
     const decoded = await jwt.verify(token, process.env.JWT_ACCESS_TOKEN_SECRET);

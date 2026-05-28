@@ -103,17 +103,17 @@ const userLoginController = asyncWrap(async (req, res) => {
     };
 
     return res.status(200)
-    .cookie("refreshToken", refreshToken, cookieOptions)
-    .cookie("accessToken", accessToken, cookieOptions)
-    .json({
-        success: true,
-        message: "User logged in successfully",
-        data: {
-            id: user._id,
-            name: user.name,
-            email: user.email
-        }
-    });
+        .cookie("refreshToken", refreshToken, cookieOptions)
+        .cookie("accessToken", accessToken, cookieOptions)
+        .json({
+            success: true,
+            message: "User logged in successfully",
+            data: {
+                id: user._id,
+                name: user.name,
+                email: user.email
+            }
+        });
 });
 
 const userLogoutController = asyncWrap(async (req, res) => {
@@ -153,6 +153,11 @@ const updateUserController = asyncWrap(async (req, res) => {
 
     if (!name || !email) {
         throw new CustomError(400, "All the fields are mandatory");
+    }
+
+    const exists = await User.findOne({ email, _id: { $ne: req.user._id } });
+    if (exists) {
+        throw new CustomError(400, "Email already in use!");
     }
 
     const user = await User.findByIdAndUpdate(
