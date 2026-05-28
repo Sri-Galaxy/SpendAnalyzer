@@ -5,7 +5,7 @@ import User from '../models/user.model.js';
 
 
 const isAuthenticated = asyncWrap(async (req, res, next) => {    
-    const token = req.cookies?.accessToken || req.header('Authorization')?.split(' ')[1];
+    const token = req.cookies?.accessToken || req.headers.authorization?.split(' ')[1];
 
     if (!token) {
         throw new CustomError(401, 'Unauthorized: No token provided');
