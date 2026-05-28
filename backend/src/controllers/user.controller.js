@@ -1,6 +1,7 @@
 import asyncWrap from "../utils/asyncWrap.js";
 import CustomError from "../utils/CustomError.js";
 import User from "../models/user.model.js";
+import jwt from "jsonwebtoken";
 
 
 const generateTokens = async (user) => {
@@ -16,6 +17,35 @@ const generateTokens = async (user) => {
         throw new CustomError(500, "Error Generating Tokens");
     }
 }
+
+const refreshAccessTokenController = asyncWrap(async (req, res) => {
+    const incomingRefreshToken = req.cookies?.refreshToken;
+
+    if (!incomingRefreshToken) {
+        throw new CustomError(401, "Unauthorized: No refresh token provided");
+    }
+
+    const decoded = await jwt.verify(incomingRefreshToken, process.env.JWT_REFRESH_TOKEN_SECRET);
+
+    const user = await User.findById(decoded?.id);
+
+    if (!user) {
+        throw new CustomError(404, "User Not Found");
+    }
+
+    const { accessToken, refreshToken } = await generateTokens(user);
+
+    const cookieOptions = {
+        httpOnly: true,
+        secure: false,
+        maxAge: 7 * 24 * 60 * 60 * 1000
+    };
+
+    return res.status(200).cookie("accessToken", accessToken, cookieOptions).cookie("refreshToken", refreshToken, cookieOptions).json({
+        success: true,
+        message: "Access token refreshed successfully"
+    });
+});
 
 const userRegisterController = asyncWrap(async (req, res) => {
     const { name, email, password } = req.body;
@@ -110,9 +140,56 @@ const userLogoutController = asyncWrap(async (req, res) => {
     });
 });
 
+const getUserController = asyncWrap(async (req, res) => {
+    return res.status(200).json({
+        success: true,
+        message: "User fetched successfully",
+        data: req.user
+    });
+});
+
+const updateUserController = asyncWrap(async (req, res) => {
+    const { name, email } = req.body;
+
+    if (!name || !email) {
+        throw new CustomError(400, "All the fields are mandatory");
+    }
+
+    const user = await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            name,
+            email
+        },
+        {
+            returnDocument: "after",
+            runValidators: true
+        }
+    ).select("-password -refreshToken");
+
+    return res.status(200).json({
+        success: true,
+        message: "User updated successfully",
+        data: user
+    });
+});
+
+const deleteUserController = asyncWrap(async (req, res) => {
+    await User.findByIdAndDelete(req.user._id);
+
+    return res.status(200).json({
+        success: true,
+        message: "User deleted successfully"
+    });
+});
+
 
 export {
     userRegisterController,
     userLoginController,
-    userLogoutController
+    userLogoutController,
+    refreshAccessTokenController,
+    getUserController,
+    updateUserController,
+    deleteUserController
 }
