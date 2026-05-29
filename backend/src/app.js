@@ -11,6 +11,9 @@ app.use(cookieParser());
 import userRouter from "./routes/user.route.js";
 app.use("/api/v1/user", userRouter);
 
+import expenseRouter from "./routes/expense.route.js";
+app.use("/api/v1/expense", expenseRouter);
+
 
 app.use((req, res) => {
     res.status(404).json({
