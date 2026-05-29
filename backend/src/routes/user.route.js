@@ -6,7 +6,8 @@ import {
     refreshAccessTokenController,
     getUserController,
     updateUserController,
-    deleteUserController
+    deleteUserController,
+    changeUserPasswordController
 } from '../controllers/user.controller.js';
 import isAuthenticated from '../middlewares/auth.middleware.js';
 import rateLimit from 'express-rate-limit';
@@ -25,6 +26,7 @@ const userRouter = express.Router();
 userRouter.post("/register", authLimiter, userRegisterController);
 userRouter.post("/login", authLimiter, userLoginController);
 userRouter.post("/logout", isAuthenticated, userLogoutController);
+userRouter.post("/change-password", authLimiter, isAuthenticated, changeUserPasswordController);
 userRouter.post("/refresh-token", refreshAccessTokenController);
 
 userRouter.get("/me", isAuthenticated, getUserController);

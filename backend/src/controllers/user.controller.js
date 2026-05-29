@@ -17,7 +17,6 @@ const generateTokens = async (user) => {
         throw new CustomError(500, "Error Generating Tokens");
     }
 }
-
 const refreshAccessTokenController = asyncWrap(async (req, res) => {
     const incomingRefreshToken = req.cookies?.refreshToken || req.body.refreshToken;
 
@@ -78,7 +77,6 @@ const userRegisterController = asyncWrap(async (req, res) => {
         data
     });
 });
-
 const userLoginController = asyncWrap(async (req, res) => {
     const { email, password } = req.body;
 
@@ -119,7 +117,6 @@ const userLoginController = asyncWrap(async (req, res) => {
             }
         });
 });
-
 const userLogoutController = asyncWrap(async (req, res) => {
     await User.findByIdAndUpdate(
         req.user._id,
@@ -151,7 +148,6 @@ const getUserController = asyncWrap(async (req, res) => {
         data: req.user
     });
 });
-
 const updateUserController = asyncWrap(async (req, res) => {
     const { name, email } = req.body;
 
@@ -182,13 +178,39 @@ const updateUserController = asyncWrap(async (req, res) => {
         data: user
     });
 });
-
 const deleteUserController = asyncWrap(async (req, res) => {
     await User.findByIdAndDelete(req.user._id);
 
     return res.status(200).json({
         success: true,
         message: "User deleted successfully"
+    });
+});
+const changeUserPasswordController = asyncWrap(async (req, res) => {
+    const { oldPassword, newPassword } = req.body;
+
+    if (!oldPassword || !newPassword) {
+        throw new CustomError(400, "All the fields are mandatory");
+    }
+
+    const user = await User.findOne({ _id: req.user._id });
+
+    if (!user) {
+        throw new CustomError(400, "Invalid credentials");
+    }
+
+    const isValid = await user.comparePassword(oldPassword);
+
+    if (!isValid) {
+        throw new CustomError(400, "Invalid credentials");
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    return res.status(200).json({
+        success: true,
+        message: "Password changed successfully"
     });
 });
 
@@ -200,5 +222,6 @@ export {
     refreshAccessTokenController,
     getUserController,
     updateUserController,
-    deleteUserController
+    deleteUserController,
+    changeUserPasswordController
 }

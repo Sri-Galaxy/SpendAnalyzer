@@ -1,6 +1,5 @@
 import express from "express";
 import cookieParser from "cookie-parser";
-import mongoSanitize from "express-mongo-sanitize";
 
 
 const app = express();
@@ -8,7 +7,6 @@ const app = express();
 app.use(express.json({ limit: "32kb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(mongoSanitize());
 
 import userRouter from "./routes/user.route.js";
 app.use("/api/v1/user", userRouter);
