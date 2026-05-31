@@ -14,7 +14,7 @@ const expenseRouter = express.Router();
 expenseRouter.post('/', isAuthenticated, addExpenseController);
 expenseRouter.get('/', isAuthenticated, getExpensesController);
 expenseRouter.get('/:id', isAuthenticated, getParticularExpenseController);
-expenseRouter.put('/:id', isAuthenticated, updateExpenseController);
+expenseRouter.patch('/:id', isAuthenticated, updateExpenseController);
 expenseRouter.delete('/:id', isAuthenticated, deleteExpenseController);
 
 

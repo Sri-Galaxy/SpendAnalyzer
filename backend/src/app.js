@@ -14,6 +14,8 @@ app.use("/api/v1/user", userRouter);
 import expenseRouter from "./routes/expense.route.js";
 app.use("/api/v1/expense", expenseRouter);
 
+import analyticsRounter from "./routes/analytics.route.js";
+app.use("/api/v1/analytics", analyticsRounter);
 
 app.use((req, res) => {
     res.status(404).json({

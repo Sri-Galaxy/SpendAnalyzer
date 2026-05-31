@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import Expense from './expense.model.js';
 
 
 const userSchema = new mongoose.Schema({
@@ -35,6 +36,16 @@ userSchema.pre("save", async function () {
     if (!this.isModified("password")) return;
 
     this.password = await bcrypt.hash(this.password, 10);
+});
+
+userSchema.post("findOneAndDelete", async function (doc) {
+    if (!doc) return;
+
+    try {
+        await Expense.deleteMany({ userId: doc._id });
+    } catch (error) {
+        console.error("Failed to delete user expenses:", error);
+    }
 });
 
 userSchema.methods.comparePassword = async function (pass) {
