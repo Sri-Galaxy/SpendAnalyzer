@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -12,6 +13,7 @@ app.use(cors({
 app.use(express.json({ limit: "32kb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
 
 import userRouter from "./routes/user.route.js";
 app.use("/api/v1/user", userRouter);
@@ -30,8 +32,6 @@ app.use((req, res) => {
 });
 
 app.use((err, req, res, next) => {
-    console.error(err);
-
     res.status(err.statusCode || 500).json({
         success: false,
         message: err.message || "Internal Server Error",
