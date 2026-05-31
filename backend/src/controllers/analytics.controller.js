@@ -21,7 +21,17 @@ const summaryOfExpensesController = asyncWrap(async (req, res) => {
                     $sum: 1
                 },
                 averageExpense: {
-                    $round: [{ $avg: '$amount' }, 2]
+                    $avg: '$amount'
+                }
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                totalSpent: 1,
+                totalExpenses: 1,
+                averageExpense: {
+                    $round: ["$averageExpense", 2]
                 }
             }
         }
