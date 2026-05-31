@@ -107,9 +107,93 @@ const getParticularExpenseController = asyncWrap(async (req, res) => {
     res.status(200).json({success: true, message: "Specific expense fetched successfully", data: expense});
 });
 
+const updateExpenseController = asyncWrap(async (req, res) => {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        throw new CustomError(400, "Invalid expense ID");
+    }
+
+    const expense = await Expense.findOne({
+        _id: id,
+        userId: req.user._id
+    });
+
+    if (!expense) {
+        throw new CustomError(404, "Expense not found");
+    }
+
+    const { amount, category, description, paymentMethod, date } = req.body;
+
+    if (amount !== undefined) {
+        if (amount <= 0) {
+            throw new CustomError(400, "Amount must be greater than zero");
+        }
+        expense.amount = amount;
+    }
+
+    if (category !== undefined) {
+        if (!category.trim()) {
+            throw new CustomError(400, "Category cannot be empty");
+        }
+        expense.category = category.trim().toLowerCase();
+    }
+
+    if (description !== undefined) {
+        expense.description = description.trim();
+    }
+
+    if (paymentMethod !== undefined) {
+        expense.paymentMethod = paymentMethod;
+    }
+
+    if (date !== undefined) {
+        const parsedDate = new Date(date);
+
+        if (isNaN(parsedDate.getTime())) {
+            throw new CustomError(400, "Invalid date format");
+        }
+        expense.date = parsedDate;
+    }
+
+    await expense.save();
+
+    return res.status(200).json({
+        success: true,
+        message: "Expense updated successfully",
+        data: expense
+    });
+});
+
+const deleteExpenseController = asyncWrap(async (req, res) => {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        throw new CustomError(400, "Invalid expense ID");
+    }
+
+    const expense = await Expense.findOne({
+        _id: id,
+        userId: req.user._id
+    });
+
+    if (!expense) {
+        throw new CustomError(404, "Expense not found");
+    }
+
+    await expense.deleteOne();
+
+    return res.status(200).json({
+        success: true,
+        message: "Expense deleted successfully"
+    });
+});
+
 
 export {
     addExpenseController,
     getExpensesController,
-    getParticularExpenseController
+    getParticularExpenseController,
+    updateExpenseController,
+    deleteExpenseController
 }
