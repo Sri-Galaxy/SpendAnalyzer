@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { getExpenses, deleteExpense } from "../api/expense.api";
+import { formatCurrency, formatDate } from "../utils/format";
 
 
 const CATEGORIES = ["food", "transport", "utilities", "entertainment", "health", "shopping", "education", "other"];
@@ -22,11 +23,11 @@ export default function ExpensesPage() {
     fetchExpenses();
   }, []);
 
-  async function fetchExpenses() {
+  async function fetchExpenses(currentFilters = filters) {
     setLoading(true);
     try {
       const activeFilters = Object.fromEntries(
-        Object.entries(filters).filter(([_, v]) => v !== "")
+        Object.entries(currentFilters).filter(([_, v]) => v !== "")
       );
       const result = await getExpenses(activeFilters);
       setExpenses(result.data.expenses);
@@ -52,8 +53,9 @@ export default function ExpensesPage() {
   }
 
   function handleClearFilters() {
-    setFilters({ category: "", paymentMethod: "", startDate: "", endDate: "" });
-    setTimeout(fetchExpenses, 0);
+    const cleared = { category: "", paymentMethod: "", startDate: "", endDate: "" };
+    setFilters(cleared);
+    fetchExpenses(cleared);
   }
 
   async function handleDelete(id) {
@@ -173,14 +175,14 @@ export default function ExpensesPage() {
                     {expense.description || expense.category}
                   </p>
                   <p className="text-xs text-gray-500 mt-0.5">
-                    {expense.category} · {expense.paymentMethod} · {new Date(expense.date).toLocaleDateString("en-IN")}
+                    {expense.category} · {expense.paymentMethod} · {formatDate(expense.date)}
                   </p>
                 </div>
               </div>
 
               <div className="flex items-center gap-3">
                 <span className="font-bold text-gray-800">
-                  ₹{expense.amount.toLocaleString("en-IN")}
+                  {formatCurrency(expense.amount)}
                 </span>
                 <Link
                   to={`/expenses/${expense._id}/edit`}

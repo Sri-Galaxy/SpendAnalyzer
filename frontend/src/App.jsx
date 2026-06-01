@@ -34,7 +34,7 @@ function App() {
         <Route path="/expenses/add" element={<ProtectedRoute><Layout><AddExpensePage /></Layout></ProtectedRoute>} />
         <Route path="/expenses/:id/edit" element={<ProtectedRoute><Layout><EditExpensePage /></Layout></ProtectedRoute>} />
         
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        <Route path="*" element={<Navigate to={user ? "/dashboard" : "/login"} replace />} />
       </Routes>
     </BrowserRouter>
   )
