@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/api/:path*",
-      "destination": "https://myhundred.onrender.com/:path*"
+      "source": "/api/v1/:path*",
+      "destination": "https://myhundred.onrender.com/api/v1/:path*"
     },
     {
       "source": "/(.*)",
