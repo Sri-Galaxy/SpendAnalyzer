@@ -12,7 +12,7 @@ export function AuthProvider({ children }) {
     useEffect(() => {
         async function fetchUser() {
             try {
-                const response = await axiosInstance.get("/user/me");
+                const response = await axiosInstance.get("/user/me", { _retry: true });
                 setUser(response.data.data);
             } catch (err) {
                 setUser(null);

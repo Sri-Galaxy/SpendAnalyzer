@@ -45,7 +45,7 @@ axiosInstance.interceptors.response.use(
             isRefreshing = true;
 
             try {
-                await axiosInstance.post("/user/refresh-token");
+                await axiosInstance.post("/user/refresh-token", null, { _retry: true });
 
                 // Token refreshed — process any queued requests
                 processQueue(null);
@@ -57,9 +57,7 @@ axiosInstance.interceptors.response.use(
                 processQueue(refreshError);
 
                 // Clear the page and send to login
-                window.location.href = "/login";
                 return Promise.reject(refreshError);
-
             } finally {
                 isRefreshing = false;
             }

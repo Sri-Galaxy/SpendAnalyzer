@@ -184,10 +184,20 @@ const updateUserController = asyncWrap(async (req, res) => {
 const deleteUserController = asyncWrap(async (req, res) => {
     await User.findByIdAndDelete(req.user._id);
 
-    return res.status(200).json({
-        success: true,
-        message: "User deleted successfully"
-    });
+    const cookieOptions = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        maxAge: 7 * 24 * 60 * 60 * 1000
+    };
+
+    return res.status(200)
+        .clearCookie("refreshToken", cookieOptions)
+        .clearCookie("accessToken", cookieOptions)
+        .json({
+            success: true,
+            message: "User deleted successfully"
+        });
 });
 const changeUserPasswordController = asyncWrap(async (req, res) => {
     const { oldPassword, newPassword } = req.body;

@@ -6,27 +6,24 @@ import { updateMe, changePassword, deleteMe, logoutUser } from "../api/user.api"
 
 export default function ProfilePage() {
   const { user, login, logout } = useAuth();
+
   const navigate = useNavigate();
 
-  // Update profile form
   const [profileData, setProfileData] = useState({
     name: user?.name || "",
     email: user?.email || "",
   });
   const [profileLoading, setProfileLoading] = useState(false);
 
-  // Change password form
   const [passwordData, setPasswordData] = useState({
     oldPassword: "",
     newPassword: "",
   });
   const [passwordLoading, setPasswordLoading] = useState(false);
 
-  // Delete account
   const [deleteConfirm, setDeleteConfirm] = useState("");
   const [deleteLoading, setDeleteLoading] = useState(false);
 
-  // Handlers
   function handleProfileChange(e) {
     setProfileData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
@@ -83,7 +80,6 @@ export default function ProfilePage() {
     setDeleteLoading(true);
     try {
       await deleteMe();
-      await logoutUser();
       logout();
       navigate("/register");
       toast.success("Account deleted successfully");
@@ -97,13 +93,11 @@ export default function ProfilePage() {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
 
-      {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-gray-800">Profile</h1>
         <p className="text-gray-500 text-sm mt-1">Manage your account settings</p>
       </div>
 
-      {/* Section 1 — Update Profile */}
       <div className="bg-white rounded-2xl shadow-sm p-6">
         <h2 className="text-lg font-semibold text-gray-800 mb-4">
           Personal Information
@@ -149,7 +143,6 @@ export default function ProfilePage() {
         </form>
       </div>
 
-      {/* Section 2 — Change Password */}
       <div className="bg-white rounded-2xl shadow-sm p-6">
         <h2 className="text-lg font-semibold text-gray-800 mb-4">
           Change Password
@@ -197,7 +190,6 @@ export default function ProfilePage() {
         </form>
       </div>
 
-      {/* Section 3 — Danger Zone */}
       <div className="bg-white rounded-2xl shadow-sm p-6 border border-red-100">
         <h2 className="text-lg font-semibold text-red-600 mb-1">
           Danger Zone
