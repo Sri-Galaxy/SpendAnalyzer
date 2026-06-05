@@ -1,6 +1,7 @@
 import asyncWrap from "../utils/asyncWrap.js";
 import CustomError from "../utils/CustomError.js";
 import User from "../models/user.model.js";
+import cookieOptions from "../utils/cookieOptions.js";
 import jwt from "jsonwebtoken";
 
 
@@ -38,13 +39,6 @@ const refreshAccessTokenController = asyncWrap(async (req, res) => {
 
     const { accessToken, refreshToken } = await generateTokens(user);
 
-    const cookieOptions = {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-        maxAge: 7 * 24 * 60 * 60 * 1000
-    };
-
     return res.status(200).cookie("accessToken", accessToken, cookieOptions).cookie("refreshToken", refreshToken, cookieOptions).json({
         success: true,
         message: "Access token refreshed successfully"
@@ -81,8 +75,6 @@ const userRegisterController = asyncWrap(async (req, res) => {
 const userLoginController = asyncWrap(async (req, res) => {
     const { email, password } = req.body;
 
-    console.log(email, password);
-
     if (!email || !password) {
         throw new CustomError(400, "All the fields are mandatory");
     }
@@ -100,13 +92,6 @@ const userLoginController = asyncWrap(async (req, res) => {
     }
 
     const { accessToken, refreshToken } = await generateTokens(user);
-
-    const cookieOptions = {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-        maxAge: 7 * 24 * 60 * 60 * 1000
-    };
 
     return res.status(200)
         .cookie("refreshToken", refreshToken, cookieOptions)
@@ -132,13 +117,6 @@ const userLogoutController = asyncWrap(async (req, res) => {
             runValidators: true
         }
     );
-
-    const cookieOptions = {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-        maxAge: 7 * 24 * 60 * 60 * 1000
-    };
 
     return res.status(200).clearCookie("refreshToken", cookieOptions).clearCookie("accessToken", cookieOptions).json({
         success: true,
@@ -185,13 +163,6 @@ const updateUserController = asyncWrap(async (req, res) => {
 });
 const deleteUserController = asyncWrap(async (req, res) => {
     await User.findByIdAndDelete(req.user._id);
-
-    const cookieOptions = {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-        maxAge: 7 * 24 * 60 * 60 * 1000
-    };
 
     return res.status(200)
         .clearCookie("refreshToken", cookieOptions)
