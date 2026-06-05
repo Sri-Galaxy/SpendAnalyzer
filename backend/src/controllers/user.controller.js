@@ -81,6 +81,8 @@ const userRegisterController = asyncWrap(async (req, res) => {
 const userLoginController = asyncWrap(async (req, res) => {
     const { email, password } = req.body;
 
+    console.log(email, password);
+
     if (!email || !password) {
         throw new CustomError(400, "All the fields are mandatory");
     }
