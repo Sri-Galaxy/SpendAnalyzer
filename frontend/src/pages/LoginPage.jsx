@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { loginUser } from "../api/user.api";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 
@@ -16,6 +16,8 @@ const LoginPage = () => {
 
     const { login } = useAuth();
 
+    const navigate = useNavigate();
+
     async function handleSubmit(e) {
         e.preventDefault();
         setLoading(true);
@@ -23,6 +25,7 @@ const LoginPage = () => {
         try {
             const result = await loginUser(formData.email, formData.password);
             login(result.data);
+            navigate("/dashboard");
             toast.success(result.message);
         } catch (err) {
             const message = err.response?.data?.message || "Something went wrong";
