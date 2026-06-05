@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { loginUser } from "../api/user.api";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
+
 
 
 const LoginPage = () => {
-    const [formData, setFormData] = useState({
-        email: "", password: ""
-    });
+    const [formData, setFormData] = useState({ email: "", password: "" });
     const [loading, setLoading] = useState(false);
 
     function handleChange(e) {
@@ -36,13 +36,11 @@ const LoginPage = () => {
         <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
             <div className="bg-white rounded-2xl shadow-md w-full max-w-md p-8">
 
-                {/* Header */}
                 <div className="mb-8 text-center">
                     <h1 className="text-3xl font-bold text-gray-800">Welcome back</h1>
                     <p className="text-gray-500 mt-2">Login to your Spend Analyzer</p>
                 </div>
 
-                {/* Form */}
                 <form onSubmit={handleSubmit} className="space-y-5">
 
                     <div>
@@ -71,7 +69,7 @@ const LoginPage = () => {
                             id="pass"
                             value={formData.password}
                             onChange={handleChange}
-                            placeholder="••••••••"
+                            placeholder="I don't know"
                             required
                             className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
@@ -87,7 +85,6 @@ const LoginPage = () => {
 
                 </form>
 
-                {/* Footer */}
                 <p className="text-center text-sm text-gray-500 mt-6">
                     Don't have an account?{" "}
                     <Link to="/register" className='text-blue-500 font-medium hover:underline'>Register</Link>
@@ -99,4 +96,4 @@ const LoginPage = () => {
 }
 
 
-export default LoginPage
+export default LoginPage;

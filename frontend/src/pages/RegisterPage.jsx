@@ -1,16 +1,17 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { registerUser } from "../api/user.api";
+import { registerUser, loginUser } from "../api/user.api";
+import { useAuth } from "../context/AuthContext";
+
+
 
 export default function RegisterPage() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
-  const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
   
+  const [formData, setFormData] = useState({ name: "", email: "", password: "" });
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   function handleChange(e) {
@@ -24,7 +25,10 @@ export default function RegisterPage() {
     try {
       const result = await registerUser(formData.name, formData.email, formData.password);
       toast.success(result.message);
-      navigate("/login");
+      
+      const loginResult = await loginUser(formData.email, formData.password);
+      login(loginResult.data);
+      navigate("/dashboard");
     } catch (error) {
       const message = error.response?.data?.message || "Something went wrong";
       toast.error(message);
@@ -85,7 +89,7 @@ export default function RegisterPage() {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="••••••••"
+              placeholder="Secret: Don't share it with anyone"
               required
               className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />

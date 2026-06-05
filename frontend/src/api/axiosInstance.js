@@ -23,10 +23,9 @@ function processQueue(error) {
 }
 
 axiosInstance.interceptors.response.use(
-    // ✅ Success — just return the response normally
+    // Success — just return the response normally
     (response) => response,
 
-    // ❌ Error — check if it's a 401
     async (error) => {
         const originalRequest = error.config;
 
@@ -46,7 +45,6 @@ axiosInstance.interceptors.response.use(
             isRefreshing = true;
 
             try {
-                // Try to get a new token
                 await axiosInstance.post("/user/refresh-token");
 
                 // Token refreshed — process any queued requests
@@ -54,7 +52,6 @@ axiosInstance.interceptors.response.use(
 
                 // Retry the original request
                 return axiosInstance(originalRequest);
-
             } catch (refreshError) {
                 // Refresh token also expired — user must login again
                 processQueue(refreshError);

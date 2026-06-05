@@ -8,6 +8,7 @@ export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [checkingAuth, setCheckingAuth] = useState(true);
 
+    // On Mount check if user is loged in or not by accessing /user/me
     useEffect(() => {
         async function fetchUser() {
             try {

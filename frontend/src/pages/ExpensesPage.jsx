@@ -75,7 +75,8 @@ export default function ExpensesPage() {
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Expenses</h1>
           <p className="text-gray-500 text-sm mt-1">
-            <p>{pagination?.count ?? expenses.length} expense{(pagination?.count ?? expenses.length) !== 1 ? "s" : ""} found</p>          </p>
+            {pagination?.count ?? expenses.length} expense{(pagination?.count ?? expenses.length) !== 1 ? "s" : ""} found
+          </p>
         </div>
         <Link
           to="/expenses/add"
