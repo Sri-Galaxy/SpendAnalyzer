@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
 import { useAuth } from './context/AuthContext.jsx';
 import Layout from './components/layout/Layout.jsx';
+import Home from './pages/Home.jsx';
 
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -23,6 +24,7 @@ function App() {
       <Toaster position="top-right" />
 
       <Routes>
+        <Route path="/home" element={user ? <Navigate to="/dashboard" replace /> : <Home />} />
         <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <LoginPage />} />
         <Route path="/register" element={user ? <Navigate to="/dashboard" replace /> : <RegisterPage />} />
 
@@ -34,7 +36,7 @@ function App() {
         <Route path="/expenses/add" element={<ProtectedRoute><Layout><AddExpensePage /></Layout></ProtectedRoute>} />
         <Route path="/expenses/:id/edit" element={<ProtectedRoute><Layout><EditExpensePage /></Layout></ProtectedRoute>} />
         
-        <Route path="*" element={<Navigate to={user ? "/dashboard" : "/login"} replace />} />
+        <Route path="*" element={<Navigate to={user ? "/dashboard" : "/home"} replace />} />
       </Routes>
     </BrowserRouter>
   )
