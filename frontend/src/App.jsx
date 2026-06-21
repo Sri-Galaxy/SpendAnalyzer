@@ -4,7 +4,7 @@ import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
 import { useAuth } from './context/AuthContext.jsx';
 import Layout from './components/layout/Layout.jsx';
-import Home from './pages/Home.jsx';
+import HomePage from './pages/HomePage.jsx';
 
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -16,6 +16,7 @@ import ProfilePage from "./pages/ProfilePage";
 import AddExpensePage from "./pages/AddExpensePage";
 import EditExpensePage from "./pages/EditExpensePage";
 
+
 function App() {
   const { user } = useAuth();
 
@@ -24,7 +25,7 @@ function App() {
       <Toaster position="top-right" />
 
       <Routes>
-        <Route path="/home" element={user ? <Navigate to="/dashboard" replace /> : <Home />} />
+        <Route path="/home" element={user ? <Navigate to="/dashboard" replace /> : <HomePage />} />
         <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <LoginPage />} />
         <Route path="/register" element={user ? <Navigate to="/dashboard" replace /> : <RegisterPage />} />
 
@@ -42,4 +43,4 @@ function App() {
   )
 }
 
-export default App
+export default App;

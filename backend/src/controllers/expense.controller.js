@@ -73,7 +73,7 @@ const getExpensesController = asyncWrap(async (req, res) => {
         query.paymentMethod = paymentMethod;
     }
 
-    const latest = (sort === "latest") ? -1 : 1;
+    const latest = (sort === "latest") ? 1 : -1;
     const skipped = (page - 1) * limit;
 
     const expenses = await Expense.find(query).sort({ date: latest }).skip(skipped).limit(limit);

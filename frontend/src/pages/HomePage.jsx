@@ -58,7 +58,7 @@ const fadeUp = (delay = 0, y = 28) => ({
   transition: { duration: 0.55, delay, ease: [0.25, 0.46, 0.45, 0.94] },
 })
 
-export default function Home() {
+export default function HomePage() {
   const navigate = useNavigate()
 
   // Inject Google Fonts
