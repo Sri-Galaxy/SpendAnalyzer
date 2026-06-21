@@ -24,9 +24,9 @@ export default function MonthlyTrendChart({ data }) {
         <Line
           type="monotone"
           dataKey="spent"
-          stroke="#3b82f6"
+          stroke="#ff6b6b"
           strokeWidth={2}
-          dot={{ fill: "#3b82f6", r: 4 }}
+          dot={{ fill: "#ff4d96", r: 4 }}
         />
       </LineChart>
     </ResponsiveContainer>

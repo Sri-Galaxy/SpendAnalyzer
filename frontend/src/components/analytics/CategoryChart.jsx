@@ -1,6 +1,16 @@
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
-const COLORS = ["#0ea5e9", "#06b6d4", "#10b981", "#8b5cf6", "#ec4899", "#f59e0b", "#ef4444", "#6366f1"];
+
+const COLORS = [
+  "#06b6d4", // teal
+  "#7c3aed", // purple
+  "#06d6a0", // mint
+  "#ff6b6b", // coral
+  "#ffb86b", // warm amber
+  "#4f46e5", // indigo
+  "#ff4d96", // pink
+  "#2dd4bf", // aqua
+];
 
 export default function CategoryChart({ data }) {
   if (!data || data.length === 0) {
@@ -17,7 +27,7 @@ export default function CategoryChart({ data }) {
   }));
 
   return (
-    <ResponsiveContainer width="100%" height={350}>
+    <ResponsiveContainer width="100%" height={360}>
       <PieChart>
         <Pie
           data={chartData}
@@ -27,9 +37,6 @@ export default function CategoryChart({ data }) {
           outerRadius={100}
           paddingAngle={2}
           dataKey="value"
-          label={({ name, percent }) =>
-            `${name} ${(percent * 100).toFixed(0)}%`
-          }
         >
           {chartData.map((_, index) => (
             <Cell key={index} fill={COLORS[index % COLORS.length]} />
@@ -47,7 +54,7 @@ export default function CategoryChart({ data }) {
           verticalAlign="bottom" 
           height={36}
           wrapperStyle={{
-            paddingTop: "20px"
+            paddingTop: "10px"
           }}
         />
       </PieChart>
