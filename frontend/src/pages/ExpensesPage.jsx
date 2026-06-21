@@ -20,7 +20,7 @@ export default function ExpensesPage() {
     paymentMethod: "",
     startDate: "",
     endDate: "",
-    sort: ""
+    sort: "latest"
   });
 
   useEffect(() => {
