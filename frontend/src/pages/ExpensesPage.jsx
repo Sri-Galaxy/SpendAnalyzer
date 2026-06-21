@@ -66,7 +66,7 @@ export default function ExpensesPage() {
   }
 
   function handleClearFilters() {
-    const cleared = { category: "", paymentMethod: "", startDate: "", endDate: "", sort: "" };
+    const cleared = { category: "", paymentMethod: "", startDate: "", endDate: "", sort: "latest" };
     setFilters(cleared);
     setPage(1);
     fetchExpenses(cleared, 1, limit);
