@@ -1,6 +1,8 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import axiosInstance from "../api/axiosInstance.js";
 
+import LoadingScreen from "./LoadingScreen.jsx";
+
 
 const AuthContext = createContext(null);
 
@@ -35,7 +37,7 @@ export function AuthProvider({ children }) {
     if (checkingAuth) {
         return (
             <div className="min-h-screen flex items-center justify-center">
-                <p className="text-gray-500">Loading...</p>
+                <LoadingScreen />
             </div>
         );
     }
