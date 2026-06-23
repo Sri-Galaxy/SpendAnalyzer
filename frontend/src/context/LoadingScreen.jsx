@@ -45,7 +45,7 @@ export default function LoadingScreen({
 
     const controls = animate(0, 100, {
       duration,
-      ease: [0.12, 0.72, 0.26, 1],
+      ease: [0.12, 0.52, 0.06, 1],
       onUpdate: (v) => setDisplay(Math.round(v)),
     })
     return () => controls.stop()
