@@ -25,7 +25,7 @@ const DEFAULT_MESSAGES = [
 export default function LoadingScreen({
   progress,
   messages = DEFAULT_MESSAGES,
-  duration = 4.2,
+  duration = 5.2,
   onComplete,
 }) {
   const [display, setDisplay]   = useState(0)
