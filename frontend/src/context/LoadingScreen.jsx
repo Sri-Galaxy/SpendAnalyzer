@@ -1,7 +1,6 @@
-import { useEffect, useState, useRef } from 'react'
-import { motion, AnimatePresence, animate } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 
-// ─── Design Tokens (same system as Page.jsx) ──────────────────────
 const C = {
   salmon: '#F2A09F',
   black:  '#1A1A1A',
@@ -10,83 +9,39 @@ const C = {
   muted:  '#9A9A9A',
 }
 
+const BAR_COLORS = [C.salmon, C.black, C.salmon]
+
 const DEFAULT_MESSAGES = [
+  'Insights you need',
   'Crunching your numbers',
-  'Finding insights you need',
-  'Spotting where it went',
-  'Almost there',
+  'Finding patterns',
+  'Abra cadabra - BOOM! analyzed',
+  'Almost there...',
 ]
 
-// ─── Component ────────────────────────────────────────────────────
-// Usage:
-//   <LoadingScreen />                                  → self-animates 0→100
-//   <LoadingScreen progress={uploadPercent} />         → driven by real progress
-//   <LoadingScreen onComplete={() => setReady(true)} />
-export default function LoadingScreen({
-  progress,
-  messages = DEFAULT_MESSAGES,
-  duration = 5.2,
-  onComplete,
-}) {
-  const [display, setDisplay]   = useState(0)
+export default function LoadingScreen({ messages = DEFAULT_MESSAGES }) {
   const [msgIndex, setMsgIndex] = useState(0)
-  const firedComplete            = useRef(false)
 
-  // Drive the counter — either follow external `progress` or self-animate
   useEffect(() => {
-    if (typeof progress === 'number') {
-      const controls = animate(display, progress, {
-        duration: 1.4,
-        ease: 'easeOut',
-        onUpdate: (v) => setDisplay(Math.round(v)),
-      })
-      return () => controls.stop()
-    }
-
-    const controls = animate(0, 100, {
-      duration,
-      ease: [0.12, 0.52, 0.06, 1],
-      onUpdate: (v) => setDisplay(Math.round(v)),
-    })
-    return () => controls.stop()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [progress, duration])
-
-  // Cycle through messages while loading
-  useEffect(() => {
-    if (display >= 100) return
-
     const id = setInterval(() => {
       setMsgIndex((i) => (i + 1) % messages.length)
-    }, 500)
-
+    }, 2000)
     return () => clearInterval(id)
-  }, [display, messages.length])
-
-  // Fire onComplete exactly once
-  useEffect(() => {
-    if (display >= 100 && !firedComplete.current) {
-      firedComplete.current = true
-      const t = setTimeout(() => onComplete && onComplete(), 350)
-      return () => clearTimeout(t)
-    }
-  }, [display, onComplete])
+  }, [messages.length])
 
   return (
     <div style={s.root}>
-      {/* Ambient ₹100 watermark — same brand cue as the landing page */}
       <motion.div
         style={s.watermark}
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.035 }}
-        transition={{ duration: 1.4 }}
+        animate={{ opacity: 0.04 }}
+        transition={{ duration: 2 }}
         aria-hidden="true"
       >
         ₹100
       </motion.div>
 
       <div style={s.center}>
-        {/* Wordmark */}
         <motion.span
           style={s.logo}
           initial={{ opacity: 0, y: -8 }}
@@ -96,70 +51,41 @@ export default function LoadingScreen({
           MyHundred
         </motion.span>
 
-        {/* Big percentage counter */}
-        <div style={s.percentRow}>
-          <span style={s.percentNum}>{display}</span>
-          <span style={s.percentSign}>%</span>
-        </div>
-
-        {/* Equalizer-style loader bars — echoes the ANALYZE/RECORD/SPEND motif */}
         <div style={s.barsRow}>
-          {[0, 1, 2].map((i) => (
+          {BAR_COLORS.map((color, i) => (
             <motion.span
               key={i}
-              style={{
-                ...s.bar,
-                backgroundColor: i === 1 ? C.black : C.salmon,
+              style={{ ...s.bar, backgroundColor: color }}
+              animate={{ scaleY: [0.35, 1, 0.5, 0.85, 0.35] }}
+              transition={{
+                duration: 1.8 + i * 0.25,
+                repeat: Infinity,
+                ease: 'easeInOut',
+                delay: i * 0.18,
               }}
-              animate={
-                display < 100
-                  ? { scaleY: [0.3, 1, 0.45, 0.85, 0.3] }
-                  : { scaleY: 1 }
-              }
-              transition={
-                display < 100
-                  ? {
-                      duration: 1.1 + i * 0.15,
-                      repeat: Infinity,
-                      ease: 'easeInOut',
-                    }
-                  : { duration: 0.3 }
-              }
             />
           ))}
         </div>
 
-        {/* Cycling status text */}
         <div style={s.msgWrap}>
           <AnimatePresence mode="wait">
             <motion.p
-              key={display >= 100 ? 'done' : msgIndex}
+              key={msgIndex}
               style={s.msg}
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.28 }}
+              transition={{ duration: 0.35 }}
             >
-              {display >= 100 ? "You're all set" : messages[msgIndex]}
-              <span style={s.ellipsis}>{display >= 100 ? '' : '…'}</span>
+              {messages[msgIndex]}
             </motion.p>
           </AnimatePresence>
         </div>
-      </div>
-
-      {/* Thin progress bar pinned to the bottom — literal progress reference */}
-      <div style={s.trackWrap}>
-        <motion.div
-          style={s.track}
-          animate={{ width: `${display}%` }}
-          transition={{ duration: 0.2, ease: 'easeOut' }}
-        />
       </div>
     </div>
   )
 }
 
-// ─── Styles ───────────────────────────────────────────────────────
 const s = {
   root: {
     position:        'fixed',
@@ -192,79 +118,47 @@ const s = {
     display:       'flex',
     flexDirection: 'column',
     alignItems:    'center',
-    gap:           '18px',
+    gap:           'clamp(20px, 4vh, 36px)',
     zIndex:        2,
+    padding:       '0 24px',
   },
 
   logo: {
     fontFamily:    "'Syne', sans-serif",
     fontWeight:    800,
-    fontSize:      '15px',
+    fontSize:      'clamp(14px, 2.2vw, 18px)',
     letterSpacing: '0.5px',
     color:         C.black,
-    marginBottom:  '6px',
-  },
-
-  percentRow: {
-    display:    'flex',
-    alignItems: 'flex-start',
-    lineHeight: 1,
-  },
-  percentNum: {
-    fontFamily:    "'Syne', sans-serif",
-    fontWeight:    800,
-    fontSize:      'clamp(72px, 14vw, 130px)',
-    color:         C.black,
-    letterSpacing: '-4px',
-  },
-  percentSign: {
-    fontFamily: "'Syne', sans-serif",
-    fontWeight: 700,
-    fontSize:   'clamp(28px, 5vw, 44px)',
-    color:      C.salmon,
-    marginTop:  '14px',
   },
 
   barsRow: {
     display:    'flex',
     alignItems: 'center',
-    gap:        '6px',
-    height:     '22px',
-    marginTop:  '2px',
+    justifyContent: 'center',
+    gap:        'clamp(10px, 2vw, 18px)',
+    height:     'clamp(80px, 16vh, 140px)',
   },
+
   bar: {
     display:         'inline-block',
-    width:           '7px',
-    height:          '22px',
-    borderRadius:    '3px',
+    width:           'clamp(14px, 2.6vw, 22px)',
+    height:          '100%',
+    borderRadius:    'clamp(7px, 1vw, 11px)',
     transformOrigin: 'center',
   },
 
-  msgWrap: {
-    height:    '20px',
-    marginTop: '8px',
-  },
   msg: {
-    fontSize:      '13px',
+    fontSize:      'clamp(13px, 1.6vw, 15px)',
     color:         C.muted,
     letterSpacing: '0.2px',
     margin:        0,
-  },
-  ellipsis: {
-    display: 'inline-block',
-    width:   '14px',
+    textAlign:     'center',
   },
 
-  trackWrap: {
-    position:        'absolute',
-    bottom:           0,
-    left:             0,
-    width:           '100%',
-    height:          '3px',
-    backgroundColor: 'rgba(26,26,26,0.06)',
-  },
-  track: {
-    height:          '100%',
-    backgroundColor: C.salmon,
+  msgWrap: {
+    height:        '20px',
+    display:       'flex',
+    alignItems:    'center',
+    justifyContent: 'center',
   },
 }
