@@ -4,7 +4,8 @@ export default function MonthlyTrendChart({ data }) {
   if (!data || data.length === 0) {
     return (
       <div className="flex items-center justify-center h-64 text-gray-400">
-        No data yet
+        <img src="/load.png" alt="no data found" />
+        <p>No data seems! I am sleeping...</p>
       </div>
     );
   }

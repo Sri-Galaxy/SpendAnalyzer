@@ -2,21 +2,22 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recha
 
 
 const COLORS = [
-  "#06b6d4", // teal
-  "#7c3aed", // purple
-  "#06d6a0", // mint
-  "#ff6b6b", // coral
-  "#ffb86b", // warm amber
-  "#4f46e5", // indigo
-  "#ff4d96", // pink
-  "#2dd4bf", // aqua
+  "#06b6d4",
+  "#7c3aed",
+  "#06d6a0",
+  "#ff6b6b",
+  "#ffb86b",
+  "#4f46e5",
+  "#ff4d96",
+  "#2dd4bf",
 ];
 
 export default function CategoryChart({ data }) {
   if (!data || data.length === 0) {
     return (
       <div className="flex items-center justify-center h-64 text-gray-400">
-        No data yet
+        <img src="/load.png" alt="no data found" />
+        <p>No data seems! I am sleeping...</p>
       </div>
     );
   }
@@ -37,6 +38,8 @@ export default function CategoryChart({ data }) {
           outerRadius={100}
           paddingAngle={2}
           dataKey="value"
+          label={({ p }) => p >= 0.04 ? `${(p * 100).toFixed(0)}%` : ""}
+          labelLine={{ stroke: "#cbd5e1", strokeWidth: 1 }}
         >
           {chartData.map((_, index) => (
             <Cell key={index} fill={COLORS[index % COLORS.length]} />
