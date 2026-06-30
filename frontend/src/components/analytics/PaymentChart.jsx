@@ -5,7 +5,7 @@ const COLORS = ["#3b82f6", "#8b5cf6", "#10b981", "#f59e0b", "#ef4444"];
 export default function PaymentChart({ data }) {
   if (!data || data.length === 0) {
     return (
-      <div className="flex items-center justify-center h-64 text-gray-400">
+      <div className="flex flex-col items-center justify-center h-64 text-gray-400">
         <img src="/load.png" alt="no data found" />
         <p>No data seems! I am sleeping...</p>
       </div>
