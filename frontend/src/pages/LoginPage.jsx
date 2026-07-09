@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { loginUser } from "../api/user.api";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { motion, transform } from 'framer-motion';
 
 
 
@@ -36,64 +37,66 @@ const LoginPage = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
-            <div className="bg-white rounded-2xl shadow-md w-full max-w-md p-8">
+        <div className="min-h-screen bg-[#F8F7F5] flex flex-col items-center justify-center p-8" style={{ fontFamily: "'Syne', sans-serif" }}>
 
-                <div className="mb-8 text-center">
-                    <h1 className="text-3xl font-bold text-gray-800">Welcome back</h1>
-                    <p className="text-gray-500 mt-2">Login to your Spend Analyzer</p>
+            <div className="mb-12 text-center">
+                <h1 className="text-6xl font-bold text-gray-800">Welcome back</h1>
+                <p className="text-gray-500 mt-2">Login to MyHundred</p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-5">
+
+                <div>
+                    <label className="block text-base font-medium text-gray-700 mb-1" htmlFor="email">
+                        Email
+                    </label>
+                    <input
+                        type="email"
+                        name="email"
+                        id="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        placeholder="you@example.com"
+                        required
+                        className="w-md border border-gray-400 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-100"
+                    />
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <div>
+                    <label className="block text-base font-medium text-gray-700 mb-1" htmlFor="pass">
+                        Password
+                    </label>
+                    <input
+                        type="password"
+                        name="password"
+                        id="pass"
+                        value={formData.password}
+                        onChange={handleChange}
+                        placeholder="I don't know"
+                        required
+                        className="w-md border border-gray-400 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-100"
+                    />
+                </div> <br />
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="email">
-                            Email
-                        </label>
-                        <input
-                            type="email"
-                            name="email"
-                            id="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            placeholder="you@example.com"
-                            required
-                            className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="pass">
-                            Password
-                        </label>
-                        <input
-                            type="password"
-                            name="password"
-                            id="pass"
-                            value={formData.password}
-                            onChange={handleChange}
-                            placeholder="I don't know"
-                            required
-                            className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                    </div>
-
-                    <button
+                <div className="w-md bg-red-100 border border-[#F2A09F] rounded-lg">
+                    <motion.button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg transition disabled:opacity-50"
+                        whileTap={{ y: 6, x: -4 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                        className="cursor-pointer w-full relative bottom-1.5 left-1 bg-[#F2A09F] hover:bg-[#fcb0ae] text-white font-semibold py-2.75 rounded-lg disabled:opacity-50"
                     >
                         {loading ? "Logging in..." : "Login"}
-                    </button>
+                    </motion.button>
+                </div>
 
-                </form>
+            </form>
 
-                <p className="text-center text-sm text-gray-500 mt-6">
-                    Don't have an account?{" "}
-                    <Link to="/register" className='text-blue-500 font-medium hover:underline'>Register</Link>
-                </p>
+            <p className="text-center text-base text-gray-500 mt-6">
+                Don't have an account?{" "}
+                <Link to="/register" className='text-red-300 font-medium hover:underline'>Register</Link>
+            </p>
 
-            </div>
         </div>
     );
 }

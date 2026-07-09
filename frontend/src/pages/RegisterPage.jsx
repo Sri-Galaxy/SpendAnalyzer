@@ -3,12 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { registerUser, loginUser } from "../api/user.api";
 import { useAuth } from "../context/AuthContext";
-
+import { motion } from "framer-motion";
 
 
 export default function RegisterPage() {
   const { login } = useAuth();
-  
+
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
   const [loading, setLoading] = useState(false);
 
@@ -25,7 +25,7 @@ export default function RegisterPage() {
     try {
       const result = await registerUser(formData.name, formData.email, formData.password);
       toast.success(result.message);
-      
+
       const loginResult = await loginUser(formData.email, formData.password);
       login(loginResult.data);
       navigate("/dashboard");
@@ -38,12 +38,11 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
-      <div className="bg-white rounded-2xl shadow-md w-full max-w-md p-8">
+    <div className="min-h-screen bg-[#F8F7F5] flex flex-col items-center justify-center px-4" style={{ fontFamily: "'Syne', sans-serif" }}>
 
         {/* Header */}
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-gray-800">Create account</h1>
+          <h1 className="text-3xl font-extrabold text-[#F2A09F]">Create account</h1>
           <p className="text-gray-500 mt-2">Start tracking your spending</p>
         </div>
 
@@ -61,7 +60,7 @@ export default function RegisterPage() {
               onChange={handleChange}
               placeholder="Srinath"
               required
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-100"
             />
           </div>
 
@@ -76,7 +75,7 @@ export default function RegisterPage() {
               onChange={handleChange}
               placeholder="you@example.com"
               required
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-100"
             />
           </div>
 
@@ -89,31 +88,34 @@ export default function RegisterPage() {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="Secret: Don't share it with anyone"
+              placeholder="Hint: Don't share it with anyone"
               required
-              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-100"
             />
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg transition disabled:opacity-50"
-          >
-            {loading ? "Creating account..." : "Create account"}
-          </button>
+          <div className="w-md bg-white border border-[#1A1A1A] rounded-lg">
+            <motion.button
+              type="submit"
+              disabled={loading}
+              whileTap={{ y: 5, x: -4 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              className="cursor-pointer w-full relative bottom-1.5 left-1 bg-[#1A1A1A] hover:bg-[#2e2e2e] text-white font-semibold py-2.75 rounded-lg disabled:opacity-50"
+            >
+              {loading ? "Creating Account..." : "Sign Up"}
+            </motion.button>
+          </div>
 
         </form>
 
         {/* Footer */}
-        <p className="text-center text-sm text-gray-500 mt-6">
+        <p className="text-center text-base text-gray-500 mt-6">
           Already have an account?{" "}
-          <Link to="/login" className="text-blue-600 font-medium hover:underline">
+          <Link to="/login" className="text-red-300 font-medium hover:underline">
             Login
           </Link>
         </p>
 
-      </div>
     </div>
   );
 }
