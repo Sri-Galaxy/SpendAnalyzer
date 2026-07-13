@@ -2,14 +2,14 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recha
 
 
 const COLORS = [
-  "#f59e0b",
-  "#f97316",
-  "#ef4444",
-  "#fb923c",
-  "#facc15",
-  "#eab308",
-  "#dc2626",
-  "#f43f5e",
+  "#f2a09f", // salmon
+  "#f97316", // orange
+  "#a855f7", // violet
+  "#f59e0b", // amber
+  "#ec4899", // rose
+  "#84cc16", // lime
+  "#ef4444", // red
+  "#c084fc", // light purple
 ];
 
 export default function CategoryChart({ data }) {
