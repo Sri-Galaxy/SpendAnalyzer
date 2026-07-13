@@ -38,14 +38,14 @@ export default function CategoryChart({ data }) {
           outerRadius={100}
           paddingAngle={2}
           dataKey="value"
-          label={({ p }) => p >= 0.04 ? `${(p * 100).toFixed(0)}%` : ""}
+          label={({ percent }) => percent >= 0.04 ? `${(percent * 100).toFixed(0)}%` : ""}
           labelLine={{ stroke: "#cbd5e1", strokeWidth: 1 }}
         >
           {chartData.map((_, index) => (
             <Cell key={index} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
-        <Tooltip 
+        <Tooltip
           formatter={(value) => `₹${value.toLocaleString("en-IN")}`}
           contentStyle={{
             backgroundColor: "#f8fafc",
@@ -53,8 +53,8 @@ export default function CategoryChart({ data }) {
             borderRadius: "8px"
           }}
         />
-        <Legend 
-          verticalAlign="bottom" 
+        <Legend
+          verticalAlign="bottom"
           height={36}
           wrapperStyle={{
             paddingTop: "10px"
